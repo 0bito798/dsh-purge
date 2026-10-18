@@ -1,3 +1,23 @@
+# 1.1.72
+
+## 中文
+
+- 版本 **1.1.72**，适配 DSH Desktop **0.2.1-rc.2**（0.2.0-rc.2 继续支持）。
+- 0.2.1 破坏性变更逐项适配：`cwd` 提示变量被上游删除（未知变量直接抛错终止整轮）——组装出口就地解析 `{{cwd}}`，`interpolate:false` 段保持字面量；WEB_SURFACE 提示段移入 `dsh-harness-dev-context`（#32/#53 换新锚点，冻结的 LEGACY 常量不动）；minimal 预设 persona 后跟 `tool-fs`（#26 新链式变体）；system-prompt complete 分支新增 `requiredContexts`（#40 保行为）；conversation-client 的 `revised.clear()` 加 size 判断（#77）。
+- 红队叶子约束：0.2.1 移除 tool-subagent 的 `toolFilter` 配置（预设里写会让整个 Agent 预设加载失败）。新增宿主补丁 **#89/#90** 恢复配置透传——请求 → 子会话组合 `tools.restrict()` + continuable descriptor 持久化（续跑/冷恢复走上游既有的重放路径），红队预设原样保留。
+- 修复 Windows 存量 bug：`hostFs` 缺 `closeSync`/`readSync`，`backupAll` 的 `.bak` 恒 EPERM 静默失败（revert 无备份可用）、`isTextShim` 恒 false 且泄漏 fd（shim 状态恒显示 binary）。
+- 0.2.1 起上游移除 `dsh-hooks-claude-code` / `dsh-hooks-codex` 包，相关补丁自动跳过。
+- 提醒：官方桌面端补丁需 asar 交换后才真正生效（应用内 Apply→重启流程自动完成）；重装/更新恢复 asar 后请重新点一次「应用」。
+
+## English
+
+- **1.1.72**, adapts to DSH Desktop **0.2.1-rc.2** (0.2.0-rc.2 still supported).
+- Upstream breaking changes handled: the `cwd` prompt variable was removed (unknown variables now abort the run) — `{{cwd}}` resolves at assembly exit while `interpolate:false` sections keep the literal; WEB_SURFACE moved into `dsh-harness-dev-context` (#32/#53 re-anchored, frozen LEGACY constants untouched); the minimal preset persona block is followed by `tool-fs` (#26 chain variant); the system-prompt complete branch gained `requiredContexts` (#40 preserves it); conversation-client guards `revised.clear()` with a size check (#77).
+- Redteam leaf enforcement: 0.2.1 dropped the tool-subagent `toolFilter` config (a preset carrying it fails to load). New host patches **#89/#90** restore the passthrough — request → child composition `tools.restrict()` plus continuable descriptor persistence (resume replays through the upstream path). The redteam preset keeps its original shape.
+- Windows bug fixes: `hostFs` lacked `closeSync`/`readSync`, so `backupAll` `.bak` writes always failed with EPERM (revert had no backups) and `isTextShim` always returned false while leaking fds (shim status stuck on "binary").
+- 0.2.1 removed the `dsh-hooks-claude-code` / `dsh-hooks-codex` packages; the related patches skip cleanly.
+- Note: desktop host patches only take effect after the asar swap (the in-app Apply → restart flow does it automatically); after a reinstall/update restores the asar, click Apply once more.
+
 # 1.1.71
 
 ## 中文
